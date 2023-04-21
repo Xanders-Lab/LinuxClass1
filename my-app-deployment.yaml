@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      containers:
+        - name: my-app
+          image: my-app:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DB_HOST
+              value: db-service
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: my-app-secrets
+                  key: db-user
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: my-app-secrets
+                  key: db-password
+            - name: ENVIRONMENT
+              valueFrom:
+                configMapKeyRef:
+                  name: my-app-config
+                  key: environment
+          volumeMounts:
+            - name: my-app-data
+              mountPath: /data
+      volumes:
+        - name: my-app-data
+          emptyDir: {}
