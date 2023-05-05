@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: expert-pod
+spec:
+  containers:
+  - name: expert-container
+    image: my-expert-image:latest
+    command: ["/bin/bash", "-c"]
+    args:
+    - while true; do
+        echo 'I am an expert pod!';
+        sleep 10;
+      done
